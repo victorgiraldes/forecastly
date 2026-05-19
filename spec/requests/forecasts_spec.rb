@@ -44,5 +44,14 @@ RSpec.describe "Forecasts", type: :request do
         expect(response).to have_http_status(:unprocessable_content)
       end
     end
+
+    context "when the ZIP code format is invalid" do
+      it "asks the user for a valid ZIP code" do
+        get "/forecast", params: { zip_code: "1" }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include("valid 5-digit US ZIP code")
+      end
+    end
   end
 end

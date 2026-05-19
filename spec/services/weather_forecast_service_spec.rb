@@ -84,5 +84,17 @@ RSpec.describe WeatherForecastService do
         expect(result).to be_nil
       end
     end
+
+    context "when the request raises a Faraday error" do
+      before do
+        allow(client).to receive(:get).and_raise(Faraday::ConnectionFailed, "connection failed")
+      end
+
+      it "returns nil" do
+        result = described_class.call(latitude: latitude, longitude: longitude, client: client)
+
+        expect(result).to be_nil
+      end
+    end
   end
 end

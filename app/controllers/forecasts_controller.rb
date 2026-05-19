@@ -9,7 +9,7 @@ class ForecastsController < ApplicationController
     return if @forecast.present?
 
     flash.now[:alert] = "Could not find forecast for this ZIP code."
-    render :new, status: :unprocessable_entity
+    render :new, status: :unprocessable_content
   end
 
   private

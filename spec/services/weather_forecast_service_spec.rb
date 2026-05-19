@@ -64,5 +64,25 @@ RSpec.describe WeatherForecastService do
         expect(result).to be_nil
       end
     end
+
+    context "when the response is successful but missing temperature data" do
+      let(:response_body) do
+        {
+          "current" => {},
+          "daily" => {}
+        }.to_json
+      end
+
+      before do
+        allow(response).to receive(:success?).and_return(true)
+        allow(response).to receive(:body).and_return(response_body)
+      end
+
+      it "returns nil" do
+        result = described_class.call(latitude: latitude, longitude: longitude, client: client)
+
+        expect(result).to be_nil
+      end
+    end
   end
 end

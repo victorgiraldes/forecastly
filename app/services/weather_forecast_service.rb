@@ -45,10 +45,16 @@ class WeatherForecastService
   end
 
   def normalize_data(data)
+    current = data.dig("current", "temperature_2m")
+    high = data.dig("daily", "temperature_2m_max")&.first
+    low = data.dig("daily", "temperature_2m_min")&.first
+
+    return if current.nil? || high.nil? || low.nil?
+
     {
-      current_temperature: data.dig("current", "temperature_2m"),
-      high_temperature: data.dig("daily", "temperature_2m_max")&.first,
-      low_temperature: data.dig("daily", "temperature_2m_min")&.first
+      current_temperature: current,
+      high_temperature: high,
+      low_temperature: low
     }
   end
 end

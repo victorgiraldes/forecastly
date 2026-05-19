@@ -8,7 +8,7 @@ RSpec.describe "Forecasts", type: :request do
     end
   end
 
-  describe "GET /forecasts/:zip_code" do
+  describe "GET /forecast" do
     let(:zip_code) { "90210" }
     let(:forecast) do
       {
@@ -29,7 +29,7 @@ RSpec.describe "Forecasts", type: :request do
       end
 
       it "returns http success" do
-        get "/forecasts/#{zip_code}"
+        get "/forecast", params: { zip_code: zip_code }
         expect(response).to have_http_status(:success)
       end
     end
@@ -40,7 +40,7 @@ RSpec.describe "Forecasts", type: :request do
       end
 
       it "returns unprocessable entity" do
-        get "/forecasts/#{zip_code}"
+        get "/forecast", params: { zip_code: zip_code }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end

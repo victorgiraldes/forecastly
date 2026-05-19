@@ -1,9 +1,9 @@
 <%= content_for :title, "Forecastly" %>
 
-<div class="search-container" data-controller="forecast-form">
+<div class="search-container">
   <h1>Get the forecast</h1>
 
-  <form class="search-form" data-action="submit->forecast-form#submit">
+  <form class="search-form" method="get" action="<%= forecast_path %>">
     <label for="zip_code">ZIP Code</label>
     <input
       type="text"
@@ -12,7 +12,6 @@
       placeholder="e.g. 90210"
       maxlength="10"
       autocomplete="postal-code"
-      data-forecast-form-target="input"
     >
     <button type="submit">Search</button>
   </form>

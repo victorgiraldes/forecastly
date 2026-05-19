@@ -20,7 +20,7 @@ class ZipCodeLookupService
     body = parse_response(response)
     return unless body
 
-    place = body["places"].first
+    place = body["places"]&.first
     return unless place
 
     normalize_data(body, place)

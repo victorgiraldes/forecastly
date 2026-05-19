@@ -1,5 +1,7 @@
 class WeatherForecastService
   BASE_URL = "https://api.open-meteo.com/v1/forecast".freeze
+  OPEN_TIMEOUT = 2
+  READ_TIMEOUT = 5
 
   def self.call(latitude:, longitude:, client: Faraday)
     new(latitude, longitude, client: client).call
@@ -12,7 +14,10 @@ class WeatherForecastService
   end
 
   def call
-    response = @client.get(BASE_URL, params)
+    response = @client.get(BASE_URL, params) do |req|
+      req.options.open_timeout = OPEN_TIMEOUT
+      req.options.timeout = READ_TIMEOUT
+    end
 
     return unless response.success?
 

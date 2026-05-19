@@ -39,7 +39,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # rspec-rails brings the RSpec testing framework to Ruby on Rails as a drop-in alternative to its default testing framework, Minitest.
-  gem 'rspec-rails', '~> 8.0', '>= 8.0.1'
+  gem "rspec-rails", "~> 8.0", ">= 8.0.1"
 end
 
 group :development do

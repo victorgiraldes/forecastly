@@ -1,2 +1,23 @@
-<h1>Forecasts#new</h1>
-<p>Find me in app/views/forecasts/new.html.erb</p>
+<%= content_for :title, "Forecastly" %>
+
+<div class="search-container" data-controller="forecast-form">
+  <h1>Get the forecast</h1>
+
+  <form class="search-form" data-action="submit->forecast-form#submit">
+    <label for="zip_code">ZIP Code</label>
+    <input
+      type="text"
+      id="zip_code"
+      name="zip_code"
+      placeholder="e.g. 90210"
+      maxlength="10"
+      autocomplete="postal-code"
+      data-forecast-form-target="input"
+    >
+    <button type="submit">Search</button>
+  </form>
+
+  <% if flash[:alert] %>
+    <p class="alert"><%= flash[:alert] %></p>
+  <% end %>
+</div>

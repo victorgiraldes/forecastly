@@ -1,2 +1,27 @@
-<h1>Forecasts#show</h1>
-<p>Find me in app/views/forecasts/show.html.erb</p>
+<%= content_for :title, "#{@forecast[:city]} Forecast — Forecastly" %>
+
+<div class="forecast-container">
+  <%= link_to "← Search again", new_forecast_path, class: "forecast-back" %>
+
+  <div class="forecast-location">
+    <h1><%= @forecast[:city] %>, <%= @forecast[:state] %></h1>
+    <p>ZIP Code: <%= @forecast[:zip_code] %></p>
+  </div>
+
+  <div class="forecast-temps">
+    <div class="temp-card">
+      <p class="label">Current</p>
+      <p class="value"><%= @forecast[:current_temperature] %>°F</p>
+    </div>
+
+    <div class="temp-card">
+      <p class="label">High</p>
+      <p class="value"><%= @forecast[:high_temperature] %>°F</p>
+    </div>
+
+    <div class="temp-card">
+      <p class="label">Low</p>
+      <p class="value"><%= @forecast[:low_temperature] %>°F</p>
+    </div>
+  </div>
+</div>

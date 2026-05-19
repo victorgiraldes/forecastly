@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 
+gem "faraday", "~> 2.14.0"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.3"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
@@ -36,6 +37,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # rspec-rails brings the RSpec testing framework to Ruby on Rails as a drop-in alternative to its default testing framework, Minitest.
+  gem 'rspec-rails', '~> 8.0', '>= 8.0.1'
 end
 
 group :development do

@@ -10,8 +10,11 @@
       id="zip_code"
       name="zip_code"
       placeholder="e.g. 90210"
-      maxlength="10"
+      maxlength="5"
+      inputmode="numeric"
+      pattern="\d{5}"
       autocomplete="postal-code"
+      required
     >
     <button type="submit">Search</button>
   </form>

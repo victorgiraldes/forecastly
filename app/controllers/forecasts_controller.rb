@@ -3,7 +3,7 @@ class ForecastsController < ApplicationController
   end
 
   def show
-    @zip_code = params[:zip_code]
+    @zip_code = permitted_params[:zip_code]
     @forecast = ForecastLookupService.call(@zip_code)
 
     return if @forecast.present?

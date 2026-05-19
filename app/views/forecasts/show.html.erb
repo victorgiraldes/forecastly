@@ -24,4 +24,8 @@
       <p class="value"><%= @forecast[:low_temperature] %>°F</p>
     </div>
   </div>
+
+  <% if @forecast[:from_cache] %>
+    <div class="cache-badge">Cached result</div>
+  <% end %>
 </div>

@@ -116,6 +116,17 @@ body {
   margin-top: 0.25rem;
 }
 
+.cache-badge {
+  margin-top: 1.25rem;
+  padding: 0.5rem 1rem;
+  background: #e0e7ff;
+  color: #4338ca;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}
+
 .forecast-temps {
   display: flex;
   gap: 1rem;

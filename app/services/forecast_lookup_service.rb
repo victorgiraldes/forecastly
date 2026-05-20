@@ -38,7 +38,7 @@ class ForecastLookupService
   private
 
   def resolve_location
-    return ZipCodeLookupService.call(@query) if ZipCodeLookupService.valid_format?(@query)
+    return ZipCodeLookupService.call(@query) if zip_code?(@query)
 
     AddressLookupService.call(@query)
   end
@@ -58,5 +58,9 @@ class ForecastLookupService
       high_temperature: forecast[:high_temperature],
       low_temperature: forecast[:low_temperature]
     }
+  end
+
+  def zip_code?(query)
+    ZipCodeLookupService.valid_format?(query)
   end
 end

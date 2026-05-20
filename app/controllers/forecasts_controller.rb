@@ -3,8 +3,8 @@ class ForecastsController < ApplicationController
   end
 
   def show
-    @zip_code = permitted_params[:zip_code]
-    @forecast = ForecastLookupService.call(@zip_code)
+    @location = permitted_params[:location]
+    @forecast = ForecastLookupService.call(@location)
 
     return if @forecast.present?
 
@@ -15,14 +15,14 @@ class ForecastsController < ApplicationController
   private
 
   def error_message
-    if ZipCodeLookupService.valid_format?(@zip_code)
-      "We couldn't retrieve the forecast right now. Please try again."
+    if @location.blank?
+      "Please enter an address or US ZIP code."
     else
-      "Please enter a valid 5-digit US ZIP code."
+      "We couldn't find a forecast for that location. Please try again."
     end
   end
 
   def permitted_params
-    params.permit(:zip_code)
+    params.permit(:location)
   end
 end

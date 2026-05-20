@@ -1,23 +1,25 @@
 class ForecastLookupService
   CACHE_EXPIRATION = 30.minutes
 
-  def self.call(zip_code, cache: Rails.cache)
-    new(zip_code, cache: cache).call
+  def self.call(query, cache: Rails.cache)
+    new(query, cache: cache).call
   end
 
-  def initialize(zip_code, cache: Rails.cache)
-    @zip_code = zip_code.to_s.strip
+  def initialize(query, cache: Rails.cache)
+    @query = query.to_s.strip
     @cache = cache
   end
 
   def call
+    return if @query.empty?
+
     cached_forecast = @cache.read(cache_key)
 
     if cached_forecast.present?
       return cached_forecast.merge(from_cache: true)
     end
 
-    location = ZipCodeLookupService.call(@zip_code)
+    location = resolve_location
     return unless location
 
     forecast = WeatherForecastService.call(
@@ -35,8 +37,14 @@ class ForecastLookupService
 
   private
 
+  def resolve_location
+    return ZipCodeLookupService.call(@query) if ZipCodeLookupService.valid_format?(@query)
+
+    AddressLookupService.call(@query)
+  end
+
   def cache_key
-    "forecast:zip_code:#{@zip_code}"
+    "forecast:#{@query.downcase}"
   end
 
   def build_result(location, forecast)

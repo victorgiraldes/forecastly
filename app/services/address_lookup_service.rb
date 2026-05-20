@@ -1,8 +1,8 @@
 class AddressLookupService
+  include ExternalApi
+
   BASE_URL = "https://nominatim.openstreetmap.org/search".freeze
   USER_AGENT = "Forecastly/1.0 (Rails weather take-home)".freeze
-  OPEN_TIMEOUT = 2
-  READ_TIMEOUT = 5
 
   def self.call(address, client: Faraday)
     new(address, client: client).call
@@ -16,13 +16,10 @@ class AddressLookupService
   def call
     return if @address.empty?
 
-    response = @client.get(BASE_URL, params) do |req|
+    response = http_get(BASE_URL, params) do |req|
       req.headers["User-Agent"] = USER_AGENT
-      req.options.open_timeout = OPEN_TIMEOUT
-      req.options.timeout = READ_TIMEOUT
     end
-
-    return unless response.success?
+    return unless response&.success?
 
     body = parse_response(response)
     return unless body.is_a?(Array)
@@ -31,9 +28,6 @@ class AddressLookupService
     return unless place
 
     normalize_data(place)
-  rescue Faraday::Error => e
-    Rails.logger.error("AddressLookupService error: #{e.message}")
-    nil
   end
 
   private
@@ -45,12 +39,6 @@ class AddressLookupService
       addressdetails: 1,
       limit: 1
     }
-  end
-
-  def parse_response(response)
-    JSON.parse(response.body)
-  rescue JSON::ParserError
-    nil
   end
 
   def normalize_data(place)

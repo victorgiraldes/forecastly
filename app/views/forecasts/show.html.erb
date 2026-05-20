@@ -1,11 +1,14 @@
-<%= content_for :title, "#{@forecast[:city]} Forecast — Forecastly" %>
+<% location = [@forecast[:city], @forecast[:state]].compact_blank.join(", ") %>
+<%= content_for :title, "#{location.presence || "Weather"} Forecast — Forecastly" %>
 
 <div class="forecast-container">
   <%= link_to "← Search again", new_forecast_path, class: "forecast-back" %>
 
   <div class="forecast-location">
-    <h1><%= @forecast[:city] %>, <%= @forecast[:state] %></h1>
-    <p>ZIP Code: <%= @forecast[:zip_code] %></p>
+    <h1><%= location.presence || "Your forecast" %></h1>
+    <% if @forecast[:zip_code].present? %>
+      <p>ZIP Code: <%= @forecast[:zip_code] %></p>
+    <% end %>
   </div>
 
   <div class="forecast-temps">

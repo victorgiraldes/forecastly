@@ -4,16 +4,13 @@
   <h1>Get the forecast</h1>
 
   <form class="search-form" method="get" action="<%= forecast_path %>">
-    <label for="zip_code">ZIP Code</label>
+    <label for="location">Address or ZIP code</label>
     <input
       type="text"
-      id="zip_code"
-      name="zip_code"
-      placeholder="e.g. 90210"
-      maxlength="5"
-      inputmode="numeric"
-      pattern="\d{5}"
-      autocomplete="postal-code"
+      id="location"
+      name="location"
+      placeholder="e.g. 90210 or 1 Main St, Springfield, IL"
+      autocomplete="off"
       required
     >
     <button type="submit">Search</button>

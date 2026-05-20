@@ -1,8 +1,8 @@
 class ZipCodeLookupService
+  include ExternalApi
+
   BASE_URL = "https://api.zippopotam.us/us/".freeze
   ZIP_CODE_FORMAT = /\A\d{5}\z/
-  OPEN_TIMEOUT = 2
-  READ_TIMEOUT = 5
 
   def self.call(zip_code, client: Faraday)
     new(zip_code, client: client).call
@@ -20,12 +20,8 @@ class ZipCodeLookupService
   def call
     return unless valid_zip_code?(@zip_code)
 
-    response = @client.get("#{BASE_URL}#{@zip_code}") do |req|
-      req.options.open_timeout = OPEN_TIMEOUT
-      req.options.timeout = READ_TIMEOUT
-    end
-
-    return unless response.success?
+    response = http_get("#{BASE_URL}#{@zip_code}")
+    return unless response&.success?
 
     body = parse_response(response)
     return unless body
@@ -34,9 +30,6 @@ class ZipCodeLookupService
     return unless place
 
     normalize_data(body, place)
-  rescue Faraday::Error => e
-    Rails.logger.error("ZipCodeLookupService error: #{e.message}")
-    nil
   end
 
   private
@@ -47,12 +40,6 @@ class ZipCodeLookupService
 
   def valid_zip_code?(zip_code)
     zip_code.match?(ZIP_CODE_FORMAT)
-  end
-
-  def parse_response(response)
-    JSON.parse(response.body)
-  rescue JSON::ParserError
-    nil
   end
 
   def normalize_data(data, place)

@@ -41,4 +41,14 @@ RSpec.describe "forecasts/show.html.erb", type: :view do
 
     expect(rendered).not_to include("Cached result")
   end
+
+  it "omits the ZIP line and joins gracefully when the address has no ZIP code" do
+    assign(:forecast, forecast.merge(zip_code: nil, state: nil))
+
+    render
+
+    expect(rendered).not_to include("ZIP Code:")
+    expect(rendered).to include("Beverly Hills")
+    expect(rendered).not_to include("Beverly Hills,")
+  end
 end

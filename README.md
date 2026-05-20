@@ -223,13 +223,12 @@ This API was chosen because it supports latitude/longitude queries, provides cur
 
 ## Caching strategy
 
-Forecast results are cached by the search query (ZIP code or address) for 30 minutes.
+The lookup uses a two-level cache:
 
-The cache wraps the full lookup flow, including location resolution and weather retrieval. The cache key is the normalized query, so a repeated search — by ZIP code or by address — is served entirely from cache.
+- **Location** is cached by the normalized query (`location:<query>`), so repeating the same text skips the ZIP/geocoding call. Locations are stable, so this entry uses a longer TTL.
+- **Forecast** is cached by the resolved ZIP code (`forecast:zip_code:<zip_code>`) for 30 minutes, so different spellings of the same address ("1 Main St" vs "1 Main Street") that resolve to the same ZIP share one entry — and a plain ZIP search shares it too. When a location has no ZIP, the forecast falls back to a coordinate-based key.
 
-When a cached result is available, the application does not call any external API.
-
-The response includes a `from_cache` indicator:
+The `from_cache` indicator reflects whether the forecast (the weather) came from cache:
 
 ```ruby
 {
@@ -248,6 +247,8 @@ This satisfies the requirement:
 ```text
 Cache the forecast details for 30 minutes for all subsequent requests by ZIP code.
 ```
+
+Keying the forecast by ZIP (rather than the raw text) keeps different spellings of the same address from fragmenting the cache.
 
 ### Cache store
 
@@ -314,6 +315,8 @@ The `geocoder` gem was considered as a single abstraction over both. However, it
 
 - ZIP codes use Zippopotam.us — a direct, predictable ZIP-to-location lookup.
 - Addresses use Nominatim — real street-address geocoding from OpenStreetMap.
+
+Zippopotam.us also offers a city/state lookup, but it resolves only postal codes and place names — not street-level addresses — so genuine address input needs a real geocoder.
 
 Both are public and need no API key. Benefits of calling them directly:
 
@@ -469,6 +472,6 @@ The application:
 - Accepts a US address or ZIP code
 - Resolves it to a location
 - Retrieves weather forecast data
-- Caches the forecast by query for 30 minutes
+- Caches the forecast by ZIP code for 30 minutes
 - Displays whether the result came from cache
 - Avoids unnecessary database and framework features

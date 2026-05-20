@@ -51,10 +51,9 @@ group :development do
 end
 
 group :test do
-  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem "capybara"
-  gem "selenium-webdriver"
-
   # Code coverage reporting [https://github.com/simplecov-ruby/simplecov]
   gem "simplecov", require: false
+
+  # Stub external HTTP in contract specs [https://github.com/bblimke/webmock]
+  gem "webmock", require: false
 end
